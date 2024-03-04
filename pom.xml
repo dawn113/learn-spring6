@@ -11,6 +11,7 @@
     <modules>
         <module>spring6-01first</module>
         <module>spring-02IoC</module>
+        <module>spring6-04IoC</module>
     </modules>
 
     <properties>
