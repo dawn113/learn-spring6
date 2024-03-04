@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--    按类型装配-->
+    <bean id="userController" class="com.dcx.spring6.autowire.UserController" autowire="byType"></bean>
+
+    <bean id="userService" class="com.dcx.spring6.autowire.service.impl.UserServiceImpl" autowire="byType"></bean>
+
+    <bean id="userDao" class="com.dcx.spring6.autowire.dao.impl.UserDaoImpl"></bean>
+<!--    按装配的属性名装配-->
+   
+</beans>

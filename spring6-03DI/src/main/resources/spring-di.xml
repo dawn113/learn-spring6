@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- property标签：通过组件类的setXxx()方法给组件对象设置属性 -->
+    <!-- name属性：指定属性名（这个属性名是getXxx()、setXxx()方法定义的，和成员变量无关） -->
+    <!-- value属性：指定属性值 -->
+
+<!--    setter注入-->
+        <bean id="student" class="com.dcx.spring6.bean.Student">
+            <property name="id" value="1002"></property>
+            <property name="name" value="张三"></property>
+            <property name="age" value="23"></property>
+            <property name="sex" >
+                <null />
+            </property>
+        </bean>
+
+<!--    构造器注入-->
+<!--    注意：-->
+
+<!--    constructor-arg标签还有两个属性可以进一步描述构造器参数：-->
+
+<!--    - index属性：指定参数所在位置的索引（从0开始）-->
+<!--    - name属性：指定参数名-->
+    <bean id="studentTwo" class="com.dcx.spring6.bean.Student">
+        <constructor-arg value="1002"></constructor-arg>
+        <constructor-arg value="李四"></constructor-arg>
+        <constructor-arg value="33"></constructor-arg>
+        <constructor-arg value="女"></constructor-arg>
+    </bean>
+
+<!--    外部bean-->
+    <bean id="clazz" class="com.dcx.spring6.bean.Clazz">
+        <property name="clazzId" value="122"></property>
+        <property name="clazzName"><null /></property>
+    </bean>
+<!--    引用外部bean-->
+    <bean id="studentThree" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1002"></property>
+        <property name="name" value="张三"></property>
+        <property name="age" value="23"></property>
+        <property name="sex" >
+            <null />
+        </property>
+        <property name="clazz" ref="clazz"></property>
+    </bean>
+
+<!--    引用内部bean-->
+    <bean id="studentFour" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1002"></property>
+        <property name="name" value="张三"></property>
+        <property name="age" value="23"></property>
+        <property name="sex" >
+            <null />
+        </property>
+<!--        内部bean-->
+        <property name="clazz">
+            <bean id="clazzIner" class="com.dcx.spring6.bean.Clazz">
+                <property name="clazzName" value="内部bean"></property>
+                <property name="clazzId" value="123"></property>
+            </bean>
+        </property>
+
+    </bean>
+
+<!--    在内部描述外部bean-->
+    <bean id="studentFive" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1004"></property>
+        <property name="name" value="赵六"></property>
+        <property name="age" value="26"></property>
+        <property name="sex" value="女"></property>
+        <property name="clazz" ref="clazz"></property>
+        <property name="clazz.clazzId" value="3333"></property>
+        <property name="clazz.clazzName" value="级联属性赋值"></property>
+    </bean>
+<!--    为数组赋值-->
+    <bean id="studentF" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1004"></property>
+        <property name="name" value="赵六"></property>
+        <property name="age" value="26"></property>
+        <property name="sex" value="女"></property>
+        <!-- ref属性：引用IOC容器中某个bean的id，将所对应的bean为属性赋值 -->
+        <property name="clazz" ref="clazz"></property>
+        <property name="hobbies">
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>烫头</value>
+            </array>
+        </property>
+    </bean>
+
+<!--    为map集合类型赋值-->
+    <bean id="teacherOne" class="com.dcx.spring6.bean.Teacher">
+        <property name="teacherId" value="1"></property>
+        <property name="teacherName" value="老师1"></property>
+    </bean>
+    <bean id="teacherTwo" class="com.dcx.spring6.bean.Teacher">
+        <property name="teacherId" value="2"></property>
+        <property name="teacherName" value="老师2"></property>
+    </bean>
+
+    <bean id="studentSix" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1004"></property>
+        <property name="name" value="赵六"></property>
+        <property name="age" value="26"></property>
+        <property name="sex" value="女"></property>
+        <!-- ref属性：引用IOC容器中某个bean的id，将所对应的bean为属性赋值 -->
+        <property name="clazz" ref="clazz"></property>
+        <property name="hobbies">
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>烫头</value>
+            </array>
+        </property>
+        <property name="teacherMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>1</value>
+                    </key>
+                    <ref bean="teacherOne"></ref>
+                </entry>
+                <entry>
+                    <key>
+                        <value>2</value>
+                    </key>
+                    <ref bean="teacherTwo"></ref>
+                </entry>
+            </map>
+        </property>
+    </bean>
+<!--    引用集合类型的bean-->
+    <util:list id="students">
+        <ref bean="studentTwo"></ref>
+        <ref bean="studentThree"></ref>
+        <ref bean="studentFour"></ref>
+    </util:list>
+    <util:map id="teacherMap">
+        <entry>
+            <key>
+                <value>1001</value>
+            </key>
+            <ref bean="teacherOne"></ref>
+        </entry>
+        <entry>
+            <key>
+                <value>1002</value>
+            </key>
+            <ref bean="teacherTwo"></ref>
+        </entry>
+    </util:map>
+    <bean id="clazzTwo" class="com.dcx.spring6.bean.Clazz">
+        <property name="clazzId" value="4444"></property>
+        <property name="clazzName" value="Javaee0222"></property>
+        <property name="students" ref="students"></property>
+    </bean>
+    <bean id="studentSeven" class="com.dcx.spring6.bean.Student">
+        <property name="id" value="1004"></property>
+        <property name="name" value="对象"></property>
+        <property name="age" value="26"></property>
+        <property name="sex" value="女"></property>
+        <!-- ref属性：引用IOC容器中某个bean的id，将所对应的bean为属性赋值 -->
+        <property name="clazz" ref="clazz"></property>
+        <property name="hobbies">
+            <array>
+                <value>抽烟</value>
+                <value>喝酒</value>
+                <value>烫头</value>
+            </array>
+        </property>
+
+        <property name="teacherMap" ref="teacherMap"></property>
+
+    </bean>
+</beans>
