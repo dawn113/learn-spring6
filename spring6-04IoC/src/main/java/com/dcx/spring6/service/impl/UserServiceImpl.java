@@ -14,6 +14,6 @@ public class UserServiceImpl implements UserService {
     public void saveUser() {
 
         System.out.println("SERVICE");
-       // userDao.saveUser();
+        userDao.saveUser();
     }
 }

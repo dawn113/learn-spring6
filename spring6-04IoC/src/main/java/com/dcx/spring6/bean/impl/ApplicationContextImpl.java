@@ -1,17 +1,20 @@
 package com.dcx.spring6.bean.impl;
 
 import com.dcx.spring6.annotation.Bean;
+import com.dcx.spring6.annotation.DI;
 import com.dcx.spring6.bean.ApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author dawn
@@ -45,7 +48,10 @@ public class ApplicationContextImpl implements ApplicationContext {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        //DI
+        loadDi();
     }
+
     //3  扫描包
     public  void loadBean(File file) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         //1当前是不是文件夹
@@ -95,5 +101,34 @@ public class ApplicationContextImpl implements ApplicationContext {
             }
 
         }
+    }
+    //属性注入
+    private void loadDi(){
+        //1 实例化对象都在beanFactory的map集合中
+        //遍历Map集合
+        Set<Map.Entry<Class, Object>> entries = beanFactory.entrySet();
+        for (Map.Entry<Class, Object> entry : entries) {
+            Object obj = entry.getValue();
+            Class<?> clazz = obj.getClass();
+            Field[] declaredFields = clazz.getDeclaredFields();
+            //3 遍历属性是否有@DI
+            for (Field field:declaredFields) {
+                DI di = field.getAnnotation(DI.class);
+                if(di != null){
+                    //如果有私有属性，设置可以设置
+                    field.setAccessible(true);
+                    try {
+                        //获取属性类型后从map中拿取对象并设置
+                        field.set(obj,beanFactory.get(field.getType()));
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+        }
+        //2 获取map集合的每个对象及其属性
+
+        //3.1 有的话就在从map集合中拿取相应的对象
     }
 }
